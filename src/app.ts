@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import session from 'express-session';
 import passport from './config/passport';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import { initializeDatabase } from './database/init';
 
@@ -18,6 +19,16 @@ const app: Express = express();
 // Middleware: Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware: CORS configuration
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 // Middleware: Session configuration
 app.use(
@@ -72,3 +83,4 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 export { app, initializeDatabase };
+
